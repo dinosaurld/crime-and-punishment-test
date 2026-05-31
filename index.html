@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>罪与罚 · 你是书中哪位人物</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#020a14;--surface:#081020;--card:#0c1628;
+  --gold:#7eb8d4;--gold2:#a8d8ee;--gold3:#c8e8f6;
+  --red:#153050;--red2:#1c3d62;--red3:#234a75;
+  --ink:#c0c8d8;--ink2:#8898b0;--ink3:#607088;
+  --border:#101828;--border2:#182438;
+  --serif:'Noto Serif SC','STSong','SimSun',serif;
+  --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--serif);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ===== 封面 ===== */
+#cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px 24px;position:relative;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 50% 40%,#061020 0%,#020a14 70%)}
+#cover::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0px,transparent 59px,rgba(40,80,130,0.04) 59px,rgba(40,80,130,0.04) 60px),repeating-linear-gradient(90deg,transparent 0px,transparent 59px,rgba(40,80,130,0.03) 59px,rgba(40,80,130,0.03) 60px);pointer-events:none}
+#cover::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent 0%,var(--gold) 30%,var(--gold2) 50%,var(--gold) 70%,transparent 100%)}
+.abstract-bg{position:absolute;inset:0;pointer-events:none;opacity:.35;background:linear-gradient(135deg,rgba(100,160,210,0.12) 0%,transparent 35%),linear-gradient(225deg,transparent 25%,rgba(70,130,190,0.08) 25%,rgba(70,130,190,0.08) 42%,transparent 42%),linear-gradient(45deg,transparent 55%,rgba(110,175,225,0.06) 55%,rgba(110,175,225,0.06) 72%,transparent 72%),linear-gradient(200deg,rgba(50,110,170,0.1) 18%,transparent 18%,transparent 32%,rgba(85,145,205,0.05) 32%,rgba(85,145,205,0.05) 36%,transparent 36%),linear-gradient(15deg,transparent 48%,rgba(95,160,215,0.08) 48%,rgba(95,160,215,0.08) 53%,transparent 53%),linear-gradient(330deg,rgba(60,125,185,0.07) 62%,transparent 62%,transparent 78%,rgba(105,170,220,0.04) 78%,rgba(105,170,220,0.04) 83%,transparent 83%)}
+
+.cc{position:absolute;width:80px;height:80px;border-color:var(--gold);border-style:solid;opacity:.35}
+.cc.tl{top:20px;left:20px;border-width:2px 0 0 2px}.cc.tr{top:20px;right:20px;border-width:2px 2px 0 0}
+.cc.bl{bottom:20px;left:20px;border-width:0 0 2px 2px}.cc.br{bottom:20px;right:20px;border-width:0 2px 2px 0}
+.eyebrow{font-size:12px;letter-spacing:6px;color:var(--ink3);margin-bottom:14px}
+.eyebrow span{display:inline-block;padding:0 16px;position:relative}
+.eyebrow span::before,.eyebrow span::after{content:'';position:absolute;top:50%;width:40px;height:1px;background:var(--ink3)}
+.eyebrow span::before{right:100%;margin-right:-16px}.eyebrow span::after{left:100%;margin-left:-16px}
+.cover-title{font-size:clamp(52px,13vw,100px);font-weight:700;letter-spacing:12px;line-height:1.1;color:var(--gold);text-shadow:0 0 60px rgba(126,184,212,0.4),0 2px 0 rgba(0,0,0,0.5);margin-bottom:6px}
+.cover-author-name{font-size:clamp(16px,4vw,30px);letter-spacing:clamp(4px,2vw,16px);color:var(--red2);margin-bottom:4px;font-weight:300;white-space:nowrap}
+.cover-sub{font-size:clamp(16px,3.5vw,26px);letter-spacing:8px;color:var(--ink2);margin-bottom:20px;font-weight:300}
+.ornament{display:flex;align-items:center;gap:12px;margin:0 auto 16px;width:min(400px,80vw)}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold))}
+.ornament::after{background:linear-gradient(to left,transparent,var(--gold))}
+.ornament span{font-size:18px;color:var(--gold);line-height:1}
+.cover-quote{font-size:clamp(13px,3.2vw,16px);color:var(--ink2);font-style:italic;line-height:1.8;margin:0 auto 16px;max-width:520px;padding:0 20px;position:relative}
+.cover-quote::before{content:'\201C';position:absolute;left:-8px;top:-4px;font-size:28px;color:var(--gold);opacity:.4}
+.cover-quote::after{content:'\201D';position:absolute;right:-8px;bottom:-12px;font-size:28px;color:var(--gold);opacity:.4}
+.cover-info{font-size:14px;line-height:1.8;color:var(--ink2);margin-bottom:16px;max-width:460px}
+.cover-info em{font-style:normal;color:var(--gold)}
+
+.cover-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
+#btn-start{display:inline-block;background:linear-gradient(135deg,var(--red) 0%,var(--red2) 50%,var(--red3) 100%);color:var(--gold2);border:1px solid var(--gold);padding:16px 48px;font-size:18px;font-family:inherit;letter-spacing:8px;cursor:pointer;border-radius:2px;transition:all .3s;box-shadow:0 0 30px rgba(21,48,80,.5),inset 0 1px 0 rgba(255,255,255,.1)}
+#btn-start:hover{transform:translateY(-2px);box-shadow:0 6px 40px rgba(28,61,98,.6),0 0 0 1px var(--gold2);color:var(--gold3)}
+#btn-gallery{display:inline-block;background:transparent;color:var(--ink2);border:1px solid var(--border2);padding:16px 36px;font-size:16px;font-family:inherit;letter-spacing:6px;cursor:pointer;border-radius:2px;transition:all .3s}
+#btn-gallery:hover{border-color:var(--gold);color:var(--gold)}
+.cover-chars{font-size:12px;color:var(--ink3);letter-spacing:3px;line-height:2.4}
+
+/* ===== 答题页 ===== */
+#quiz{display:none;height:100vh;flex-direction:column;position:relative}
+.qsticky{position:sticky;top:0;z-index:50;background:rgba(2,10,20,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border2);padding:14px 0}
+.qsticky-inner{max-width:780px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.qhead-lbl{font-size:14px;letter-spacing:3px;color:var(--gold);white-space:nowrap}
+.prog-row{display:flex;align-items:center;gap:10px;flex:1;max-width:260px}
+.prog-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(to right,var(--red2),var(--gold));transition:width .4s}
+.prog-lbl{font-size:12px;color:var(--ink2);white-space:nowrap}
+.prog-lbl b{color:var(--gold)}
+
+#q-container{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+#q-card{width:100%;max-width:720px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:36px 28px 28px;position:relative}
+@keyframes cardOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+#q-card.is-leaving{animation:cardOut .05s ease forwards;pointer-events:none}
+#q-card.is-entering{animation:cardIn .07s ease forwards}
+.qnum-badge{font-size:11px;color:var(--gold);background:rgba(126,184,212,.08);border:1px solid rgba(126,184,212,.2);padding:3px 10px;border-radius:2px;display:inline-block;margin-bottom:16px}
+.qtext{font-size:clamp(16px,4.5vw,20px);line-height:1.9;color:var(--ink);margin-bottom:28px;min-height:80px}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:3px;cursor:pointer;transition:all .15s;user-select:none}
+.opt:hover{border-color:var(--ink3);background:rgba(255,255,255,.03)}
+.opt.sel{border-color:var(--gold);background:rgba(126,184,212,.08)}
+.opt input{display:none}
+.opt-dot{width:24px;height:24px;min-width:24px;border:1px solid var(--ink3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink3);transition:all .15s;margin-top:1px}
+.opt.sel .opt-dot{background:var(--gold);border-color:var(--gold);color:var(--bg);font-weight:700}
+.opt-txt{font-size:15px;line-height:1.7;color:var(--ink2)}
+.opt.sel .opt-txt{color:var(--ink)}
+
+.q-nav{display:flex;justify-content:space-between;gap:16px;margin-top:28px;padding-top:20px;border-top:1px solid var(--border)}
+.q-nav-btn{background:transparent;color:var(--ink2);border:1px solid var(--border2);padding:10px 28px;font-size:14px;font-family:inherit;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:all .2s}
+.q-nav-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.q-nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.q-nav-btn.primary{background:linear-gradient(135deg,var(--red) 0%,var(--red2) 100%);color:var(--gold2);border-color:var(--gold)}
+.q-nav-btn.primary:hover:not(:disabled){box-shadow:0 4px 20px rgba(28,61,98,.5);transform:translateY(-1px)}
+
+/* ===== 结果页 ===== */
+#result{display:none;max-width:720px;margin:0 auto;padding:60px 20px 100px;text-align:center}
+.res-ey{font-size:12px;letter-spacing:6px;color:var(--ink3);margin-bottom:10px}
+.res-hl{font-size:18px;letter-spacing:4px;color:var(--gold);margin-bottom:40px}
+.res-card{background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:44px 28px 36px;margin-bottom:24px;position:relative;overflow:hidden;animation:fadeup .6s both}
+@keyframes fadeup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes popin{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.res-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent 0%,var(--cc,var(--gold)) 40%,var(--cc,var(--gold)) 60%,transparent 100%)}
+.res-title{font-size:13px;letter-spacing:2px;color:var(--ink2);margin-bottom:8px}
+.res-quote{font-size:clamp(14px,3.5vw,17px);color:var(--gold2);font-style:italic;margin-bottom:16px;letter-spacing:1px;line-height:1.7;animation:fadeup .6s .25s both}
+.res-name{font-size:clamp(40px,10vw,72px);font-weight:700;letter-spacing:12px;line-height:1.1;margin-bottom:28px;animation:fadeup .6s .3s both}
+.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;animation:fadeup .6s .4s both}
+.tag{padding:5px 14px;border-radius:20px;font-size:12px;letter-spacing:2px;border:1px solid}
+.res-div{width:100%;height:1px;background:linear-gradient(to right,transparent,var(--border2),transparent);margin:24px 0}
+.res-desc{font-size:15px;line-height:2.4;color:var(--ink2);text-align:left;animation:fadeup .6s .5s both}
+.classic-avatar{width:120px;height:120px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:64px;border:3px solid;animation:popin .6s .15s both cubic-bezier(.175,.885,.32,1.275);overflow:hidden}
+
+.radar-wrap{margin:28px 0;animation:fadeup .6s .45s both}
+.radar-title{font-size:12px;letter-spacing:4px;color:var(--ink3);margin-bottom:16px}
+#radar-canvas{display:block;margin:0 auto;max-width:100%}
+
+.also-box{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:24px;animation:fadeup .6s .6s both}
+.also-title{font-size:12px;letter-spacing:4px;color:var(--ink3);margin-bottom:18px}
+.also-list{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.also-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 18px;background:var(--card);border:1px solid var(--border);border-radius:4px;min-width:90px}
+.also-emoji{font-size:22px}.also-name{font-size:14px;color:var(--ink)}.also-pct{font-size:12px;color:var(--ink3)}
+
+.action-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fadeup .6s .7s both}
+.action-btns button{padding:12px 32px;font-size:14px;font-family:inherit;letter-spacing:4px;cursor:pointer;border-radius:2px;transition:all .3s;border:1px solid}
+#btn-share{background:linear-gradient(135deg,var(--red) 0%,var(--red2) 100%);color:var(--gold2);border-color:var(--gold)}
+#btn-share:hover{box-shadow:0 4px 30px rgba(28,61,98,.6);transform:translateY(-2px)}
+#btn-retry{background:transparent;color:var(--ink2);border-color:var(--border2)}
+#btn-retry:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ===== 角色陈列页 ===== */
+#gallery{display:none;max-width:960px;margin:0 auto;padding:60px 20px 100px}
+.gallery-header{text-align:center;margin-bottom:40px;animation:fadeup .5s both}
+.gallery-header .res-ey{margin-bottom:6px}
+.gallery-header h2{font-size:clamp(28px,6vw,48px);font-weight:700;letter-spacing:8px;color:var(--gold);margin-bottom:10px}
+.gallery-header p{font-size:14px;color:var(--ink3);letter-spacing:3px}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:20px}
+.char-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:28px 24px 24px;position:relative;overflow:hidden;animation:fadeup .5s both;display:flex;flex-direction:column;align-items:center;text-align:center}
+.char-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.char-card-emoji{font-size:48px;margin-bottom:10px;animation:popin .5s .1s both cubic-bezier(.175,.885,.32,1.275)}
+.char-card-name{font-size:24px;font-weight:700;letter-spacing:6px;margin-bottom:4px}
+.char-card-title{font-size:12px;color:var(--ink3);letter-spacing:1px;margin-bottom:14px;line-height:1.6}
+.char-card-quote{font-size:13px;color:var(--gold2);font-style:italic;line-height:1.7;margin-bottom:14px;max-width:360px}
+.char-card-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px}
+.char-card-desc{font-size:13px;line-height:2;color:var(--ink2);text-align:left}
+.gallery-back-wrap{text-align:center;margin-top:40px;animation:fadeup .6s .5s both}
+.gallery-back-wrap button{background:transparent;color:var(--ink2);border:1px solid var(--border2);padding:12px 36px;font-size:14px;font-family:inherit;letter-spacing:4px;cursor:pointer;border-radius:2px;transition:all .3s}
+.gallery-back-wrap button:hover{border-color:var(--gold);color:var(--gold)}
+
+#poster-modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.92);align-items:center;justify-content:center;flex-direction:column;padding:20px}
+#poster-modal.active{display:flex}
+#poster-canvas{display:block;max-width:min(100%,400px);max-height:72vh;border:none;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+.poster-tip{color:#aaa;font-size:13px;margin-top:16px;letter-spacing:1px}
+.poster-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:20px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.poster-close:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.2)}
+
+@media (max-width:480px){
+  .qsticky-inner{padding:0 16px}
+  #q-card{padding:28px 20px 22px}
+  .res-card{padding:36px 20px 28px}
+  .also-item{min-width:80px;padding:10px 14px}
+  .cover-btns{flex-direction:column;align-items:center}
+  .gallery-grid{grid-template-columns:1fr}
+  .char-card{padding:22px 18px 20px}
+}
+</style>
+</head>
+<body>
+
+<div id="cover">
+  <div class="abstract-bg"></div>
+  <div class="cc tl"></div><div class="cc tr"></div><div class="cc bl"></div><div class="cc br"></div>
+  <div class="eyebrow"><span>陀思妥耶夫斯基</span></div>
+  <div class="cover-title">罪 与 罚</div>
+  <div class="cover-author-name">费奥多尔·陀思妥耶夫斯基</div>
+  <div class="cover-sub">人 物 性 格 测 试</div>
+  <div class="ornament"><span>✧</span></div>
+  <div class="cover-quote">我不是向你下跪，我是向人类的一切苦难下跪。<span style="display:block;text-align:right;font-size:12px;color:var(--ink3);margin-top:6px;font-style:normal">——拉斯柯尼科夫对索尼娅</span></div>
+  <div class="cover-info">共 <em id="q-count">21</em> 道测题，探君心志<br>看看你是书中哪个人物</div>
+  <div class="cover-btns">
+    <button id="btn-start">开 始 测 试</button>
+    <button id="btn-gallery">人 物 陈 列</button>
+  </div>
+  <div class="cover-chars">7 位角色等你解锁 · 杀人犯与圣徒 · 虚无者与信仰者</div>
+</div>
+
+<div id="quiz">
+  <div class="qsticky">
+    <div class="qsticky-inner">
+      <div class="qhead-lbl">人物测试</div>
+      <div class="prog-row">
+        <div class="prog-track"><div class="prog-fill" id="pfill"></div></div>
+        <div class="prog-lbl"><b id="pnum">0</b> / <span id="ptotal">21</span></div>
+      </div>
+    </div>
+  </div>
+  <div id="q-container">
+    <div id="q-card">
+      <span class="qnum-badge" id="q-badge">第 1 题</span>
+      <div class="qtext" id="q-text">题目加载中……</div>
+      <div class="opts" id="q-opts"></div>
+      <div class="q-nav">
+        <button class="q-nav-btn" id="btn-prev">← 上一题</button>
+        <button class="q-nav-btn primary" id="btn-next">下一题 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="result"></div>
+<div id="gallery"></div>
+
+<div id="poster-modal">
+  <button class="poster-close" onclick="closePoster()">×</button>
+  <canvas id="poster-canvas" width="750" height="1334"></canvas>
+  <div class="poster-tip">长按保存图片，分享给好友</div>
+</div>
+
+<script>
+// All strings use single quotes; corner brackets「」for internal quoting
+var DATA = {
+  chars: [
+    {name: '拉斯柯尼科夫', title: '法学辍学生 · 用理性为暴力辩护的人', emoji: '🪓', color: '#B03030', quotes: ['我不是向你下跪，我是向人类的一切苦难下跪。', '人这种卑劣的东西，对什么都会习惯的！', '支配一切发抖的畜生，支配一切蝼蚁……那就是我！', '痛苦与苦难——这是意识广阔和心灵深刻的必然标志。'], traits: ['理性至上', '骄傲孤独', '理论先于良知', '自我撕裂'], desc: '当你想要验证一块玻璃是否结实的时候，这块玻璃注定要破碎。当你想要让自己超乎常人的时候，你就注定承担更多的压力与磨折。欲戴王冠，必承其重，想要跳出规则不可以只凭借绝对的理智和热血，你需要做的，还有默默变强，看准时机。不要切断自己与别人的联系，请相信那些值得信任的人。'},
+    {name: '索尼娅', title: '马尔梅拉多夫之女 · 用信仰承受一切的人', emoji: '🕯️', color: '#E8C96A', quotes: ['上帝会保护你的！', '没有你，我什么都不是。', '她就这样走了出去……回来以后，把钱往桌上一放，自己躺在角落，对着墙，一句话不说。'], traits: ['信仰深沉', '温柔坚韧', '为他人而活', '坦诚谦卑'], desc: '了解一个人不能只看他嘴上说了什么，更要看他真正做了什么。你相信一些东西的力量，信任的力量，支持的力量，爱的力量——你可能不会出现在人群中央，但那些被你默默支撑着的人，都知道你的力量。索尼娅的光辉不体现在与苦难的抗争，而在于她把苦难转化成了对他人的爱。世界以痛吻我，我却抱之以歌。'},
+    {name: '拉祖米欣', title: '大学生 · 全书唯一不内耗的人', emoji: '🤝', color: '#5D8C4A', quotes: ['朋友就是朋友，不管他是不是杀人犯。', '一个人只要不撒谎，活着就轻松得多。', '你有什么事，就说话，我来办。'], traits: ['忠诚可靠', '行动力强', '不内耗', '坦荡热心'], desc: '拉祖米欣这人能处，愿意为了朋友两肋插刀。可以说是全书最可靠，最有力量感之人。ENFJ的宝剑在他手中无往不利，为朋友和周围的人带去黑暗生活中的光。拉祖米欣从不相信长夜将至，因为他，就是太阳'},
+    {name: '杜尼娅', title: '拉斯柯尼科夫的妹妹 · 意志如铁的女人', emoji: '🗡️', color: '#C06070', quotes: ['我宁可死，也不愿嫁给一个我不尊敬的人。', '你手里有枪，那就扣扳机。'], traits: ['意志坚定', '自尊心极强', '独立果敢', '不向任何人低头'], desc: '自尊，强硬，意志力属性拉满，你不会为了安逸放弃自己的底线，也不会让别人替你决定你的人生，「我的路，要我自己来选择」。杜尼娅是整本书里最硬的女人——面对贫穷，胁迫，死亡，她始终都是站着的，面对家人和爱，她也始终坚守，人性的光辉在闪耀。'},
+    {name: '波尔费利', title: '预审法官 · 用对话让凶手自首的心理大师', emoji: '♟️', color: '#7088A0', quotes: ['你杀了人，但现在你还不是一个真正的坏人。', '我没有物证，但我知道是你。', '逃跑对你来说太容易了……但你跑不掉的，你心里清楚。'], traits: ['洞察人心', '耐心深沉', '理性内敛', '用智不用力'], desc: '你是一个沉默的观察者。你不急着得到什么，因为你知道——真正的答案会在时间里慢慢浮现。你相信理解一个人比惩罚一个人更重要。比起用子弹杀死罪恶，波尔费利更喜欢用言语渡化罪恶。因为暴力从来无法根本解决问题，只有真正的感同身受，才可以赢得一颗心的认同。'},
+    {name: '斯维德里加依洛夫', title: '地主 · 冷静的虚无主义者', emoji: '🎭', color: '#7851A9', quotes: ['人是什么？人就是一条卑鄙的虫子。', '你知道吗，永恒可能只是一间布满蜘蛛网的乡下浴室。', '我不过是一个放荡的人，而她呢……她是一个真正有道德的人。'], traits: ['道德边界模糊', '深谙人性', '冷静到令人不安', '虚无中偶现善念'], desc: '色欲，堕落，诡计，这是他有的罪；深陷债务，沦为「囚徒」，承受虚无，这是他受的罚。他的一生，在自己的枪响之后结束了。他最后留下的钱或许可以让孤儿好好生活，在生前的最后时刻他或许找到了自我，不知上帝是否愿意宽恕他。'},
+    {name: '卢仁', title: '律师 · 用体面包装自私的精致利己者', emoji: '💼', color: '#8899A0', quotes: ['娶一个穷姑娘，她就会一辈子觉得欠你的。', '在这个世界上，最要紧的是对自己有用。', '做事首先要讲科学，讲经济。'], traits: ['精于算计', '体面的自私', '把人当工具', '缺乏真正的温情'], desc: '一个冷酷的利己主义者，知道自己想要什么，也知道如何用最体面的方式得到它。你不觉得自己做了坏事，因为你每一步都合乎规则。卢仁不觉得自己是恶人，他的问题不是违法，而是把所有人都当成可以计算的工具——包括他的婚姻爱情。他代表了陀思妥耶夫斯基眼中的理性主义最冷酷的一种结果。如果社会全是卢仁，那未免有些太可怕了。'}
+  ],
+  dimensions: [
+    {key: 'd1', name: '理性·信仰', desc: '理性至上 vs 信仰超越'},
+    {key: 'd2', name: '行动·内省', desc: '主动改变 vs 思考观望'},
+    {key: 'd3', name: '自我·利他', desc: '为自己活 vs 为他人活'},
+    {key: 'd4', name: '秩序·自由', desc: '遵守规则 vs 打破规则'},
+    {key: 'd5', name: '坦诚·隐藏', desc: '心口如一 vs 深藏不露'},
+    {key: 'd6', name: '骄傲·谦卑', desc: '万事靠自己 vs 承认需要别人'}
+  ],
+  patterns: {
+    '拉斯柯尼科夫': [3,3,1,3,1,1],
+    '索尼娅': [1,1,3,1,3,3],
+    '拉祖米欣': [2,3,3,2,3,2],
+    '杜尼娅': [2,3,2,2,2,1],
+    '波尔费利': [3,1,2,1,1,2],
+    '斯维德里加依洛夫': [3,2,1,3,2,2],
+    '卢仁': [3,3,1,1,1,1]
+  },
+  questions: [
+    {dim: 'd1', q: '你认为判断一件事对错的最可靠标准是什么？', opts: [{t: '内心深处的直觉告诉我', v: 1}, {t: '情理和逻辑综合考量', v: 2}, {t: '能被逻辑推导证明的才是可靠的', v: 3}]},
+    {dim: 'd1', q: '你无法用理性解释一件发生在自己身上的事，你倾向于？', opts: [{t: '相信它有意义，只是我暂时不理解', v: 1}, {t: '保持开放，不急于下结论', v: 2}, {t: '随机事件而已，不需要赋予意义', v: 3}]},
+    {dim: 'd1', q: '一个聪明人为了做一件他认定是好事的事，杀了一个「对社会没用的人」。你怎么看？', opts: [{t: '不管出于什么理由，杀人这件事本身就是错的', v: 1}, {t: '理论上说得通，但现实中不该这么做', v: 2}, {t: '如果理由足够充分，可以理解', v: 3}]},
+    {dim: 'd1', q: '一个人的价值最终由什么决定？', opts: [{t: '他对他人的善意和关怀', v: 1}, {t: '他对身边人的实际影响', v: 2}, {t: '他的能力和做过的事', v: 3}]},
+    {dim: 'd2', q: '你陷入困境，第一反应是？', opts: [{t: '先退一步，让自己安静下来，等看清了再动', v: 1}, {t: '边想边试着做点什么', v: 2}, {t: '先动手解决，想太多耽误事', v: 3}]},
+    {dim: 'd2', q: '你做了一件自己认为完全合理、但社会认为是错的事。之后你最可能的状态是？', opts: [{t: '反复回想，身体和精神都垮掉', v: 1}, {t: '告诉自己做了就做了，但偶尔还是不安', v: 2}, {t: '完全坦然，错的是规则不是我', v: 3}]},
+    {dim: 'd2', q: '面对一个需要改变的人生方向，你通常是？', opts: [{t: '反复思考各种可能，迟迟不动', v: 1}, {t: '有足够把握后才迈出第一步', v: 2}, {t: '先干了再说，边做边调整', v: 3}]},
+    {dim: 'd2', q: '你更欣赏哪种做事风格？', opts: [{t: '一个人沉下去，把一件事琢磨透', v: 1}, {t: '和几个人一起碰撞，互相启发', v: 2}, {t: '拉上一群人直接开干，热闹才有劲', v: 3}]},
+    {dim: 'd3', q: '你帮了一个素不相识的人。后来这个人因为这件事，在你最需要的时候站在了你这边。你怎么理解这个结果？', opts: [{t: '巧合而已，帮的时候没想那么多', v: 1}, {t: '有点意外但也合理，善意会回来', v: 2}, {t: '种了因就会结果，人和人之间本就是这样连起来的', v: 3}]},
+    {dim: 'd3', q: '如果你成了某个人的唯一支撑，你的感受是？', opts: [{t: '沉重，这不完全是我的责任', v: 1}, {t: '珍惜这种联结，也保留空间', v: 2}, {t: '这是我的意义所在，愿意承担', v: 3}]},
+    {dim: 'd3', q: '你希望被怎样记住？', opts: [{t: '活出了自己的人', v: 1}, {t: '对自己和他人都真实的人', v: 2}, {t: '对别人有用的人', v: 3}]},
+    {dim: 'd4', q: '在一个不公正的体系里，你和周围的人都深受其害。你觉得怎么做才是对的？', opts: [{t: '在规则内寻找改变', v: 1}, {t: '视情况而定，有些时候绕过去也可以', v: 2}, {t: '不公正的规则没有让人遵守的资格', v: 3}]},
+    {dim: 'd4', q: '你更想要什么样的生活？', opts: [{t: '固定轨道上有序前进', v: 1}, {t: '有框架但保留弹性', v: 2}, {t: '没有固定模式，随时可以推翻重来', v: 3}]},
+    {dim: 'd4', q: '团队领导的决策跟你完全不同，你？', opts: [{t: '服从，在其位谋其政', v: 1}, {t: '提意见但最终服从', v: 2}, {t: '按自己的想法来', v: 3}]},
+    {dim: 'd5', q: '你有一个秘密，告诉了另一个人。从此以后——', opts: [{t: '你们的关系就变了，你的一部分在他手里了', v: 1}, {t: '关系变深了，但有风险也值得', v: 2}, {t: '说出来是松绑，你们之间多了一条真正的线', v: 3}]},
+    {dim: 'd5', q: '有人问你不想回答的问题，你通常？', opts: [{t: '把话题引开，他们察觉不到的', v: 1}, {t: '半真半假，不撒谎但不全说', v: 2}, {t: '直接说不想回答', v: 3}]},
+    {dim: 'd5', q: '「任何一句话，你不说出来便是那句话的主人，你说出来便是那句话的奴隶。」你更认同？', opts: [{t: '说出来的代价太大，不如烂在肚子里', v: 1}, {t: '可以跟愿意承担的人说一点', v: 2}, {t: '藏着的秘密终究会从心里长出来，不如说了', v: 3}]},
+    {dim: 'd5', q: '有人在私下场合问起你一件你在意但不想张扬的事，你通常？', opts: [{t: '轻描淡写带过去', v: 1}, {t: '承认有这事，但不展开', v: 2}, {t: '既然你问了，我就说', v: 3}]},
+    {dim: 'd6', q: '你发现自己犯了不可挽回的错误。你第一反应是？', opts: [{t: '没人能帮我，我自己想办法扛', v: 1}, {t: '寻找一个能理解我的人', v: 2}, {t: '说出来，哪怕要付出代价', v: 3}]},
+    {dim: 'd6', q: '跟你水平差不多的人，在某件事上明显超过了你。你内心最接近的想法是？', opts: [{t: '我不服，下次一定会赢回来', v: 1}, {t: '有点在意，但不会影响我', v: 2}, {t: '这个人确实有值得我学的地方', v: 3}]},
+    {dim: 'd6', q: '你做错了事，责任在你自己，你的反应是？', opts: [{t: '找理由解释，至少不完全是自己的错', v: 1}, {t: '承认但有保留', v: 2}, {t: '是我的错，我认', v: 3}]}
+  ]
+};
+
+var d4keys = {d1: true, d2: true, d5: true};
+function lvl4(s) { if (s <= 6) return 1; if (s <= 9) return 2; return 3; }
+function lvl3(s) { if (s <= 5) return 1; if (s <= 7) return 2; return 3; }
+
+var ENGINE = {
+  compute: function(answers) {
+    var dimScores = {d1: 0, d2: 0, d3: 0, d4: 0, d5: 0, d6: 0};
+    DATA.questions.forEach(function(q, idx) {
+      var ans = answers[idx];
+      if (ans != null) dimScores[q.dim] += q.opts[ans].v;
+    });
+    var levels = {};
+    for (var k in dimScores) {
+      levels[k] = d4keys[k] ? lvl4(dimScores[k]) : lvl3(dimScores[k]);
+    }
+    var dimIdx = {};
+    DATA.dimensions.forEach(function(d, i) { dimIdx[d.key] = i; });
+
+    var ranked = DATA.chars.map(function(c) {
+      var pat = DATA.patterns[c.name];
+      var sumSq = 0;
+      DATA.dimensions.forEach(function(d, i) {
+        sumSq += Math.pow(levels[d.key] - pat[i], 2);
+      });
+      var dist = Math.sqrt(sumSq);
+      var maxDist = Math.sqrt(6 * 4);
+      var similarity = Math.max(0, Math.round((1 - dist / maxDist) * 100));
+      var matchScore = 0;
+      DATA.questions.forEach(function(q, qi) {
+        if (answers[qi] == null) return;
+        var charIdeal = pat[dimIdx[q.dim]];
+        var gap = Math.abs(q.opts[answers[qi]].v - charIdeal);
+        matchScore += (gap === 0) ? 1 : (gap === 1) ? 0.5 : 0;
+      });
+      return {char: c, dist: dist, similarity: similarity, matchCount: Math.round(matchScore), levels: levels};
+    }).sort(function(a, b) { return a.dist - b.dist; });
+    return {dimScores: dimScores, levels: levels, ranked: ranked};
+  },
+  shuffleQuestions: function() {
+    var arr = DATA.questions.map(function(q, idx) { return {dim: q.dim, q: q.q, opts: q.opts, originalIndex: idx}; });
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
+};
+
+var currentQuestions = [];
+var answers = [];
+var currentIndex = 0;
+var lastResult = null;
+var autoAdvanceTimer = null;
+
+function clearAutoAdvance() {
+  if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+}
+
+function init() {
+  document.getElementById('q-count').textContent = DATA.questions.length;
+  document.getElementById('ptotal').textContent = DATA.questions.length;
+  document.getElementById('btn-start').addEventListener('click', startQuiz);
+  document.getElementById('btn-gallery').addEventListener('click', showGallery);
+  document.getElementById('btn-prev').addEventListener('click', prevQuestion);
+  document.getElementById('btn-next').addEventListener('click', nextQuestion);
+}
+
+function startQuiz() {
+  currentQuestions = ENGINE.shuffleQuestions();
+  answers = new Array(currentQuestions.length).fill(null);
+  currentIndex = 0;
+  isTransitioning = false;
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('quiz').style.display = 'flex';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('gallery').style.display = 'none';
+  renderQuestion();
+  updateProgress();
+  var card = document.getElementById('q-card');
+  card.classList.add('is-entering');
+  setTimeout(function() { card.classList.remove('is-entering'); }, 100);
+}
+
+var isTransitioning = false;
+
+function renderQuestion() {
+  var q = currentQuestions[currentIndex];
+  document.getElementById('q-badge').textContent = '第 ' + (currentIndex + 1) + ' 题';
+  document.getElementById('q-text').textContent = q.q;
+  var letters = ['A', 'B', 'C'];
+  var html = '';
+  for (var oi = 0; oi < q.opts.length; oi++) {
+    var o = q.opts[oi];
+    var selClass = answers[currentIndex] === oi ? 'sel' : '';
+    var checked = answers[currentIndex] === oi ? 'checked' : '';
+    html += '<label class="opt ' + selClass + '" onclick="selectOption(' + oi + ')"><input type="radio" name="q' + currentIndex + '" value="' + oi + '" ' + checked + '><span class="opt-dot">' + letters[oi] + '</span><span class="opt-txt">' + o.t + '</span></label>';
+  }
+  document.getElementById('q-opts').innerHTML = html;
+  document.getElementById('btn-prev').disabled = currentIndex === 0;
+  document.getElementById('btn-next').textContent = currentIndex === currentQuestions.length - 1 ? '揭 晓 答 案' : '下一题 →';
+}
+
+function transitionTo(newIndex) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  var card = document.getElementById('q-card');
+  card.classList.remove('is-entering');
+  card.classList.add('is-leaving');
+  setTimeout(function() {
+    currentIndex = newIndex;
+    renderQuestion();
+    card.classList.remove('is-leaving');
+    card.classList.add('is-entering');
+    setTimeout(function() { card.classList.remove('is-entering'); isTransitioning = false; }, 70);
+  }, 50);
+}
+
+function selectOption(oi) {
+  clearAutoAdvance();
+  if (isTransitioning) return;
+  answers[currentIndex] = oi;
+  var opts = document.querySelectorAll('#q-opts .opt');
+  for (var i = 0; i < opts.length; i++) {
+    opts[i].classList.toggle('sel', i === oi);
+    opts[i].querySelector('input').checked = i === oi;
+  }
+  updateProgress();
+  if (currentIndex < currentQuestions.length - 1) {
+    autoAdvanceTimer = setTimeout(function() {
+      autoAdvanceTimer = null;
+      if (answers[currentIndex] != null) transitionTo(currentIndex + 1);
+    }, 80);
+  }
+}
+
+function updateProgress() {
+  var done = 0;
+  for (var i = 0; i < answers.length; i++) { if (answers[i] != null) done++; }
+  document.getElementById('pnum').textContent = done;
+  document.getElementById('pfill').style.width = (done / currentQuestions.length * 100) + '%';
+}
+
+function prevQuestion() {
+  clearAutoAdvance();
+  if (currentIndex > 0) transitionTo(currentIndex - 1);
+}
+
+function nextQuestion() {
+  clearAutoAdvance();
+  if (isTransitioning) return;
+  if (answers[currentIndex] == null) {
+    var card = document.getElementById('q-card');
+    card.style.animation = 'none'; card.offsetHeight;
+    card.style.animation = 'wiggle .35s ease';
+    setTimeout(function() { card.style.animation = ''; }, 350);
+    return;
+  }
+  if (currentIndex === currentQuestions.length - 1) submitQuiz();
+  else transitionTo(currentIndex + 1);
+}
+
+function submitQuiz() {
+  clearAutoAdvance();
+  var orderedAnswers = new Array(DATA.questions.length).fill(null);
+  currentQuestions.forEach(function(q, idx) { orderedAnswers[q.originalIndex] = answers[idx]; });
+  lastResult = ENGINE.compute(orderedAnswers);
+  showResult(lastResult);
+}
+
+function showResult(result) {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('gallery').style.display = 'none';
+  var rDiv = document.getElementById('result');
+  rDiv.style.display = 'block';
+  var win = result.ranked[0].char;
+  var quote = win.quotes[Math.floor(Math.random() * win.quotes.length)];
+  var totalQ = DATA.questions.length;
+  var topMC = result.ranked[0].matchCount;
+
+  var runnerHtml = '';
+  for (var i = 1; i <= 3; i++) {
+    var r = result.ranked[i];
+    runnerHtml += '<div class="also-item"><span class="also-emoji">' + r.char.emoji + '</span><span class="also-name">' + r.char.name + '</span><span class="also-pct">' + r.matchCount + '/' + totalQ + '</span></div>';
+  }
+
+  var tagHtml = '';
+  for (var ti = 0; ti < win.traits.length; ti++) {
+    var t = win.traits[ti];
+    tagHtml += '<span class="tag" style="color:' + win.color + ';border-color:' + win.color + '40;background:' + win.color + '15">' + t + '</span>';
+  }
+
+  rDiv.innerHTML = '<div style="animation:fadeup .5s both"><div class="res-ey">✧ 测 试 结 果 ✧</div><div class="res-hl">你是《罪与罚》中的</div></div><div class="res-card" style="--cc:' + win.color + '"><div class="classic-avatar" style="border-color:' + win.color + ';background:' + win.color + '15"><span>' + win.emoji + '</span></div><div class="res-title">' + win.title + '</div><div class="res-quote">' + quote + '</div><div class="res-name" style="color:' + win.color + '">' + win.name + '</div><div class="tags">' + tagHtml + '</div><div style="margin-bottom:20px"><span style="display:inline-flex;align-items:baseline;gap:6px;padding:6px 20px;border:1px solid ' + win.color + '40;border-radius:20px;font-size:13px;color:' + win.color + ';background:' + win.color + '10;letter-spacing:1px"><b style="font-size:22px;font-weight:900">' + topMC + '</b>/<span>' + totalQ + '</span> 题吻合</span></div><div class="res-div"></div><div class="res-desc">' + win.desc + '</div></div><div class="radar-wrap"><div class="radar-title">✧ 你 的 六 维 人 格 画 像 ✧</div><canvas id="radar-canvas" width="340" height="300"></canvas></div><div class="also-box"><div class="also-title">✧ 与你性格相近的人物 ✧</div><div class="also-list">' + runnerHtml + '</div></div><div class="action-btns"><button id="btn-share">下载海报</button><button id="btn-retry">重新测试</button><button id="btn-gallery-result" style="background:transparent;color:var(--ink2);border-color:var(--border2);letter-spacing:4px" onclick="showGallery()">人物陈列</button></div>';
+  drawRadar(result.dimScores);
+  document.getElementById('btn-retry').addEventListener('click', restart);
+  document.getElementById('btn-share').addEventListener('click', function() { generatePoster(win, result); });
+  window.scrollTo(0, 0);
+}
+
+function showGallery() {
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  var gDiv = document.getElementById('gallery');
+  gDiv.style.display = 'block';
+
+  var cardsHtml = '';
+  for (var i = 0; i < DATA.chars.length; i++) {
+    var c = DATA.chars[i];
+    var quote = c.quotes[Math.floor(Math.random() * c.quotes.length)];
+    var tagHtml = '';
+    for (var ti = 0; ti < c.traits.length; ti++) {
+      tagHtml += '<span class="tag" style="color:' + c.color + ';border-color:' + c.color + '40;background:' + c.color + '15">' + c.traits[ti] + '</span>';
+    }
+    cardsHtml += '<div class="char-card" style="animation-delay:' + (i * 0.08) + 's"><span class="char-card-emoji">' + c.emoji + '</span><div class="char-card-name" style="color:' + c.color + '">' + c.name + '</div><div class="char-card-title">' + c.title + '</div><div class="char-card-quote">「' + quote + '」</div><div class="char-card-tags">' + tagHtml + '</div><div class="char-card-desc">' + c.desc + '</div></div>';
+    // inject per-card top border color
+    cardsHtml = cardsHtml.replace('class="char-card"', 'class="char-card" style="--cc:' + c.color + '"');
+  }
+  // fix: manually rebuild since replace only hits first
+  var finalHtml = '';
+  for (var j = 0; j < DATA.chars.length; j++) {
+    var ch = DATA.chars[j];
+    var qu = ch.quotes[Math.floor(Math.random() * ch.quotes.length)];
+    var tgs = '';
+    for (var k = 0; k < ch.traits.length; k++) {
+      tgs += '<span class="tag" style="color:' + ch.color + ';border-color:' + ch.color + '40;background:' + ch.color + '15">' + ch.traits[k] + '</span>';
+    }
+    finalHtml += '<div class="char-card" style="--cc:' + ch.color + ';animation-delay:' + (j * 0.08) + 's"><span class="char-card-emoji">' + ch.emoji + '</span><div class="char-card-name" style="color:' + ch.color + '">' + ch.name + '</div><div class="char-card-title">' + ch.title + '</div><div class="char-card-quote">「' + qu + '」</div><div class="char-card-tags">' + tgs + '</div><div class="char-card-desc">' + ch.desc + '</div></div>';
+  }
+
+  gDiv.innerHTML = '<div class="gallery-header"><div class="res-ey">✧ 角 色 陈 列 ✧</div><h2>罪与罚 · 人物图鉴</h2><p>陀思妥耶夫斯基笔下的七位灵魂</p></div><div class="gallery-grid">' + finalHtml + '</div><div class="gallery-back-wrap"><button onclick="backToCover()">← 返回首页</button></div>';
+  window.scrollTo(0, 0);
+}
+
+function backToCover() {
+  document.getElementById('gallery').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('cover').style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+
+function restart() {
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('result').innerHTML = '';
+  document.getElementById('gallery').style.display = 'none';
+  document.getElementById('cover').style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+
+function drawRadar(dimScores) {
+  var canvas = document.getElementById('radar-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = 340 * dpr; canvas.height = 300 * dpr;
+  ctx.scale(dpr, dpr);
+  var cx = 170, cy = 145, r = 85, n = 6;
+  ctx.strokeStyle = 'rgba(126,184,212,0.2)'; ctx.lineWidth = 1;
+  for (var lv = 1; lv <= 4; lv++) {
+    ctx.beginPath();
+    for (var i = 0; i < n; i++) {
+      var a = Math.PI * 2 * i / n - Math.PI / 2;
+      var rr = r * lv / 4;
+      var x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath(); ctx.stroke();
+  }
+  for (var i = 0; i < n; i++) {
+    var a = Math.PI * 2 * i / n - Math.PI / 2;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); ctx.stroke();
+  }
+  ctx.beginPath();
+  for (var i = 0; i < n; i++) {
+    var a = Math.PI * 2 * i / n - Math.PI / 2;
+    var dk = DATA.dimensions[i].key;
+    var is4 = d4keys[dk];
+    var pct = Math.min(100, Math.max(0, (dimScores[dk] - (is4 ? 4 : 3)) / (is4 ? 8 : 6) * 100));
+    var rr = r * (pct / 100);
+    var x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(126,184,212,0.2)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(126,184,212,0.85)'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#c0c8d8'; ctx.font = '12px "Noto Serif SC", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (var i = 0; i < n; i++) {
+    var a = Math.PI * 2 * i / n - Math.PI / 2;
+    var lr = r + 28;
+    ctx.fillText(DATA.dimensions[i].name, cx + Math.cos(a) * lr, cy + Math.sin(a) * lr - 7);
+    ctx.fillStyle = '#c8e8f6'; ctx.font = '10px "Noto Serif SC", serif';
+    ctx.fillText(Math.round(dimScores[DATA.dimensions[i].key]) + '分', cx + Math.cos(a) * lr, cy + Math.sin(a) * lr + 8);
+    ctx.fillStyle = '#c0c8d8'; ctx.font = '12px "Noto Serif SC", serif';
+  }
+}
+
+function wrapText(ctx, text, x, y, maxW, lh) {
+  var chars = text.split(''); var line = '', ty = y;
+  for (var i = 0; i < chars.length; i++) {
+    var tline = line + chars[i];
+    if (ctx.measureText(tline).width > maxW && i > 0) { ctx.fillText(line, x, ty); line = chars[i]; ty += lh; }
+    else line = tline;
+  }
+  ctx.fillText(line, x, ty); return ty;
+}
+function hexToRgba(h, a) { var r = parseInt(h.slice(1,3),16), g = parseInt(h.slice(3,5),16), b = parseInt(h.slice(5,7),16); return 'rgba('+r+','+g+','+b+','+a+')'; }
+
+function generatePoster(win, result) {
+  var canvas = document.getElementById('poster-canvas');
+  var ctx = canvas.getContext('2d');
+  var w = 750, quote = win.quotes[Math.floor(Math.random() * win.quotes.length)];
+  canvas.width = w; canvas.height = 2400;
+  ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'center';
+  var y = 70; y += 60; y += 110; y += 56; y += 60;
+  var imgS = 260; y += imgS + 55; y += 90;
+  ctx.font = 'italic 26px serif';
+  var qc = ('【' + quote + '】').split(''); var ql = 1, qln = '';
+  for (var ci = 0; ci < qc.length; ci++) { var ch = qc[ci]; var t = qln + ch; if (ctx.measureText(t).width > 600 && qln) { ql++; qln = ch; } else qln = t; }
+  y += ql * 42 + 60;
+  ctx.font = '22px serif';
+  var dc = win.desc.split(''); var dl = 1, dln = '';
+  for (var di = 0; di < dc.length; di++) { var dh = dc[di]; var dt = dln + dh; if (ctx.measureText(dt).width > 600 && dln) { dl++; dln = dh; } else dln = dt; }
+  y += dl * 40 + 60; y += 100;
+  var h = Math.max(1334, y);
+  canvas.width = w; canvas.height = h;
+  ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'center';
+  var grad = ctx.createRadialGradient(w/2, h*0.25, 80, w/2, h*0.5, h);
+  grad.addColorStop(0, '#061020'); grad.addColorStop(1, '#020a14');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
+  var lg = ctx.createLinearGradient(0,0,w,0);
+  lg.addColorStop(0,'transparent'); lg.addColorStop(0.3,'#7eb8d4'); lg.addColorStop(0.5,'#a8d8ee'); lg.addColorStop(0.7,'#7eb8d4'); lg.addColorStop(1,'transparent');
+  ctx.fillStyle = lg; ctx.fillRect(0,0,w,4);
+  y = 70; ctx.fillStyle = '#7a8ca0'; ctx.font = '24px serif'; ctx.fillText('罪与罚 · 人物性格测试', w/2, y); y += 60;
+  ctx.fillStyle = '#4a5a70'; ctx.font = '26px serif'; ctx.fillText('你是《罪与罚》中的', w/2, y); y += 110;
+  ctx.fillStyle = win.color; ctx.font = 'bold 88px serif'; ctx.fillText(win.name, w/2, y); y += 56;
+  ctx.fillStyle = '#c0c8d8'; ctx.font = '24px serif'; ctx.fillText(win.title, w/2, y); y += 60;
+  var pcx = w/2, pcy = y + imgS/2;
+  ctx.fillStyle = hexToRgba(win.color, 0.1); ctx.beginPath(); ctx.arc(pcx, pcy, imgS/2, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = win.color; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(pcx, pcy, imgS/2, 0, Math.PI*2); ctx.stroke();
+  ctx.font = '160px serif'; ctx.fillText(win.emoji, w/2, pcy + 50); y += imgS + 55;
+  for (var ti = 0; ti < win.traits.length; ti++) {
+    var tx = w/2 + (ti - (win.traits.length-1)/2) * 155, tw = 136, th = 36;
+    ctx.strokeStyle = hexToRgba(win.color, 0.35); ctx.lineWidth = 1.5; ctx.strokeRect(tx-tw/2, y, tw, th);
+    ctx.fillStyle = hexToRgba(win.color, 0.08); ctx.fillRect(tx-tw/2, y, tw, th);
+    ctx.fillStyle = win.color; ctx.font = '20px serif'; ctx.fillText(win.traits[ti], tx, y+th/2+7);
+  }
+  y += 90;
+  ctx.fillStyle = '#c8e8f6'; ctx.font = 'italic 26px serif'; y = wrapText(ctx, '【' + quote + '】', w/2, y, 600, 42); y += 60;
+  ctx.fillStyle = '#b0c0d0'; ctx.font = '22px serif'; ctx.textAlign = 'left'; y = wrapText(ctx, win.desc, 70, y, 600, 40); y += 60;
+  ctx.fillStyle = 'rgba(20,40,65,0.6)'; ctx.fillRect(60, y, w-120, 1); ctx.textAlign = 'center';
+  ctx.fillStyle = '#c0c8d8'; ctx.font = '20px serif'; ctx.fillText('陀思妥耶夫斯基 · 罪与罚', w/2, y+40);
+  ctx.fillStyle = '#4a5a70'; ctx.font = '16px serif'; ctx.fillText('人物性格测试', w/2, y+66);
+  try {
+    canvas.toBlob(function(blob){
+      if (!blob) { fallbackPoster(canvas); return; }
+      var url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = '罪与罚-' + win.name + '.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    }, 'image/png');
+  } catch(e) { fallbackPoster(canvas); }
+}
+
+function fallbackPoster(canvas) {
+  try {
+    var dataUrl = canvas.toDataURL('image/png'), w = window.open('');
+    if (w) { w.document.write('<img src="' + dataUrl + '" style="max-width:100%"><p style="text-align:center;font-family:sans-serif;color:#666">右键图片 → 另存为</p>'); }
+  } catch(e2) { document.getElementById('poster-modal').classList.add('active'); }
+}
+function closePoster() { document.getElementById('poster-modal').classList.remove('active'); }
+
+var ss = document.createElement('style');
+ss.textContent = '@keyframes wiggle{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(4px)}}';
+document.head.appendChild(ss);
+init();
+</script>
+</body>
+</html>
